@@ -4,7 +4,9 @@
 %%
 
 % Preamble
-\documentclass[11pt]{beamer}
+\documentclass[11pt,aspectratio=169]{beamer}
+\usepackage[english]{babel}
+\usepackage{blindtext}
 \usetheme{Copenhagen}
 
 
@@ -21,4 +23,46 @@
         \frametitle{Second Slide}
         Contents of the second slide
     \end{frame}
+
+    \begin{frame}
+        \frametitle{F1 score, three classes}
+        \begin{center}
+            \includegraphics[scale=0.3]{images/f1-False}
+        \end{center}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{fsddfs}
+        dssdsadsads
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{sdsa}
+        \begin{columns}[t]
+            \column{0.5\textwidth}
+            \blindtext
+            \column{0.5\textwidth}
+            \blindtext
+        \end{columns}
+    \end{frame}
+    \begin{frame}[fragile]
+        \frametitle{sdsa}
+
+
+
+        \begin{figure}[ht]
+            \begin{minipage}[b]{0.47\linewidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/f1-False}
+                \caption{default}
+            \end{minipage}
+            \hspace{0.5cm}
+            \begin{minipage}[b]{0.47\linewidth}
+                \centering
+                \includegraphics[width=\textwidth]{images/f1-False}
+                \caption{default}
+            \end{minipage}
+        \end{figure}
+    \end{frame}
+
 \end{document}
