@@ -11,13 +11,28 @@
 \usetheme{Copenhagen}
 \usecolortheme{crane}
 \usepackage[autostyle]{csquotes}
-
+\usepackage{graphicx}
+\usepackage{amsmath}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{nicefrac}
+\usepackage{framed}
+\usepackage{graphicx}
 \setbeamertemplate{section page}
 {
 \begin{centering}
     \begin{beamercolorbox}[sep=12pt,center]{part title}
         \usebeamerfont{section title}\insertsection\par
     \end{beamercolorbox}
+\end{centering}
+}
+
+
+\setbeamertemplate{subsection page}
+{
+\begin{centering}
+    % \begin{beamercolorbox}[sep=5pt,center]{part title}
+    \usebeamerfont{section title}\insertsubsection\par
+    %  \end{beamercolorbox}
 \end{centering}
 }
 
@@ -70,6 +85,7 @@
     \section{Creating a data set}
     \frame{\sectionpage}
     \subsection{Data Source}
+    \frame{\subsectionpage}
     \begin{frame}
         \frametitle{Common Crawl}
         \begin{itemize}
@@ -115,22 +131,22 @@
     \end{frame}
 
     \begin{frame}
-      \frametitle{Pairs: Examples}
+        \frametitle{Pairs: Examples}
 
-      \begin{tabularx}{\textwidth}{XXX}
-          \toprule
-          Brands & Computer Science & Random \\
-          \midrule
-          Microsoft vs. Apple & Java vs. Python & baseball vs. hockey \\
-          Nikon vs. Leica & Eclipse vs. Netbeans & fishing vs. swimming\\
-          Coca-Cola vs. Pepsi & OpenGL vs. Direct3D & SUV vs. minivan\\
-          Nike vs. Adidas & Integer vs. Float & Kennedy vs. Nixon\\
-          Ibuprofen vs. Advil & USB vs. Bluetooth & plastic vs. wood\\
-          Ford vs. Honda & Oracle vs. MysQL & Harvard vs. Princeton\\
+        \begin{tabularx}{\textwidth}{XXX}
+            \toprule
+            Brands & Computer Science & Random \\
+            \midrule
+            Microsoft vs. Apple & Java vs. Python & baseball vs. hockey \\
+            Nikon vs. Leica & Eclipse vs. Netbeans & fishing vs. swimming\\
+            Coca-Cola vs. Pepsi & OpenGL vs. Direct3D & SUV vs. minivan\\
+            Nike vs. Adidas & Integer vs. Float & Kennedy vs. Nixon\\
+            Ibuprofen vs. Advil & USB vs. Bluetooth & plastic vs. wood\\
+            Ford vs. Honda & Oracle vs. MysQL & Harvard vs. Princeton\\
 
-          \bottomrule
+            \bottomrule
 
-      \end{tabularx}
+        \end{tabularx}
 
     \end{frame}
 
@@ -145,9 +161,9 @@
         \end{itemize}
 
     \end{frame}
-    
+
     \begin{frame}
-      \frametitle{Sentence Sampling: Examples}
+        \frametitle{Sentence Sampling: Examples}
         \begin{itemize}
             \item \enquote{There is no doubt \textbf{Python} is better than \textbf{Ruby} at in aspect you will pick.}
             \item \enquote{Goodnight \textbf{NetBeans}, Hello \textbf{Eclipse}}
@@ -158,84 +174,259 @@
     \end{frame}
 
     \subsection{Crowdsourcing}
+    \frame{\subsectionpage}
     \begin{frame}
-        \frametitle{Setup}
+        \frametitle{Task Design}
+        \begin{itemize}
+            \item Each domain was annotated via the crowdsourcing platform Crowdflower\footnote{\url{https://crowdflower.com}}
+            \item A prestudy was conducted to assess the quality of the annotation guidelines and the sentence selection process
+            \item In the prestudy, about 25 percent were labeled as comparative
+            \item Each sentence was annotated by at least five annotators
+        \end{itemize}
 
     \end{frame}
 
     \begin{frame}
-        \frametitle{Results: Brands}
+        \frametitle{Task Design}
+        Initially, the annotators were asked to answer the question:
+        \includegraphics[scale=0.3]{images/q1other}
+    \end{frame}
 
+
+    \begin{frame}
+        \frametitle{Task Design}
+        \begin{itemize}
+            \item After 750 annotated sentences per domain, \texttt{OTHER} was dropped
+            \item People confused \texttt{OTHER} with \texttt{NONE} frequently
+            \item People were dissatisfied because the distinction is to hard
+            \item \texttt{OTHER} and \texttt{NONE} were hardly distinguishable in first classification experiments
+            \item \texttt{OTHER} was merged into \texttt{NONE} for the classification experiments
+        \end{itemize}
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Results: Brands}
+        \begin{center}
+            \includegraphics[scale=0.3]{images/Brands-dist}
+        \end{center}
     \end{frame}
 
     \begin{frame}
         \frametitle{Results: Computer Science}
-
+        \begin{center}
+            \includegraphics[scale=0.3]{images/Compsci-dist.pdf}
+        \end{center}
     \end{frame}
 
     \begin{frame}
         \frametitle{Results: Random}
-
+        \begin{center}
+            \includegraphics[scale=0.3]{images/Random-dist.pdf}
+        \end{center}
     \end{frame}
-
 
     \begin{frame}
         \frametitle{Results: All}
+        \begin{center}
+            \includegraphics[scale=0.3]{images/Alldomains-dist.pdf}
+        \end{center}
+    \end{frame}
 
+    \begin{frame}
+        \frametitle{Results: Confidence}
+
+        Annotation confidence for all domains. The confidence is calculated as $\nicefrac{\text{judgments for majority class}}{\text{total judgments}}$.
+
+        \begin{center}
+            \begin{tabular}{@{}rrr@{}}
+                \toprule
+                Confidence & Sentences & \% of data set \\
+                \midrule
+                100\%    & 5111 & 71.00     \\
+                91-99\%    & 0 & 0.00     \\
+                81-90\%    & 75 & 1.04     \\
+                71-80\%    & 1057 & 14.68     \\
+                61-70\%    & 33 & 0.46     \\
+                51-60\%    & 754 & 10.47     \\
+                0-50\%    & 169 & 2.35     \\
+                \bottomrule
+            \end{tabular}
+
+        \end{center}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Results}
+        \begin{itemize}
+            \item 7199 annotated sentences
+            \item 27 percent of the sentences are comparative
+            \item The annotators agreed on the same class for 5111 sentences
+            \item
+        \end{itemize}
     \end{frame}
 
     \section{Classification}
     \frame{\sectionpage}
-    \subsection{Setup}
     \begin{frame}
         \frametitle{Algorithms}
+        \begin{columns}[t]
+            \column{2in}
+            \begin{itemize}
+                \item 13 classification algorithms were tested with a bag-of-words-model
+                \item XGBoost (gradient boosted decision trees) worked best
+                \item  The graphic shows the f1 score and standard derivation (black bar).
+            \end{itemize}
+            \column{3.5in}
+
+            \includegraphics[scale=0.35,trim={1cm 0 0 5.45cm},clip]{images/classifier.pdf}
+
+
+        \end{columns}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Setup}
+        \begin{itemize}
+            \item XGBoost with 1000 base estimators was used in all further experiments
+            \item Exhaustive grid search and randomized search on XGBoost's parameters did not find better parameter values
+            \item The 7199 sentences were split into a development (5759) and held-out (1440).
+            \item All experiments were conducted on the development set and evalutated with k-folds cross validation ($k = 5$)
+            \item Two setups: classification with three classes and binary classification (\texttt{BETTER} and \texttt{WORSE} were combined to \texttt{ARG})
+        \end{itemize}
 
     \end{frame}
 
     \begin{frame}
-        \frametitle{Evaluation}
+        \frametitle{Baseline: Three classes}
 
+        \begin{minipage}{.5\linewidth}
+            \caption{Random (stratified) baseline}
+            \label{tbl:3stratifiedbaseline}
+            \centering
+
+            \begin{tabularx}{0.97\linewidth}{Xrrrr}
+                \toprule
+                & precision & recall & f1 score                     \\ \midrule
+                \texttt{B} & 0.19 \scriptsize{$\pm$0.01} & 0.21 \scriptsize{$\pm$0.01} & 0.20 \scriptsize{$\pm$0.01} \\
+                \texttt{W}  & 0.06 \scriptsize{$\pm$0.02} & 0.05 \scriptsize{$\pm$0.02} & 0.06 \scriptsize{$\pm$0.03} \\
+                \texttt{N}   & 0.73 \scriptsize{$\pm$0.00}  & 0.73 \scriptsize{$\pm$0.00} & 0.73 \scriptsize{$\pm$0.00} \\
+                avg. & 0.57 \scriptsize{$\pm$0.00} & 0.58 \scriptsize{$\pm$0.01} & 0.57 \scriptsize{$\pm$0.00} \\
+                \bottomrule
+            \end{tabularx}
+
+        \end{minipage}%
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \caption{Majority class baseline}
+            \label{tbl:3majoritybaseline}
+            \begin{tabularx}{0.97\linewidth}{Xrrrr}
+                \toprule
+                & precision & recall & f1 score                                    \\ \midrule
+                \texttt{B} & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00}                \\
+                \texttt{W}  & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00}                \\
+                \texttt{N}   & 0.73 \scriptsize{$\pm$0.00}     & 1.00 \scriptsize{$\pm$0.00} & 0.84 \scriptsize{$\pm$0.00}                \\
+                avg. & 0.53 \scriptsize{$\pm$0.00} & 0.73 \scriptsize{$\pm$0.00} & \textbf{0.61} \scriptsize{$\pm$0.00} \\
+                \bottomrule
+            \end{tabularx}
+        \end{minipage}\newline\newline
+        \texttt{B} = \texttt{BETTER}, \texttt{W} = \texttt{WORSE}, \texttt{N} = \texttt{NONE},
     \end{frame}
 
     \begin{frame}
-        \frametitle{Baseline}
+        \frametitle{Baseline: Binary}
+
+
+        \begin{minipage}{.5\linewidth}
+            \caption{Random (stratified) baseline}
+            \label{tbl:binmaj}
+            \centering
+
+            \begin{tabularx}{0.97\linewidth}{Xrrrr}
+                \toprule
+                & precision & recall & f1 score                              \\ \midrule
+                \texttt{ARG}  & 0.26 \scriptsize{$\pm$0.03} & 0.26 \scriptsize{$\pm$0.03} & 0.26 \scriptsize{$\pm$0.03}          \\
+                \texttt{N} & 0.72 \scriptsize{$\pm$0.01} & 0.72 \scriptsize{$\pm$0.01} & 0.72 \scriptsize{$\pm$0.01}          \\
+                avg. & 0.60 \scriptsize{$\pm$0.02} & 0.60 \scriptsize{$\pm$0.02} & 0.60 \scriptsize{$\pm$0.02} \\
+                \bottomrule
+            \end{tabularx}
+
+        \end{minipage}%
+        \begin{minipage}{.5\linewidth}
+            \centering
+            \caption{Majority class baseline}
+            \label{tbl:binstrat}
+            \begin{tabularx}{0.97\linewidth}{Xrrrr}
+                \toprule
+                & precision & recall & f1 score                     \\ \midrule
+                \texttt{ARG}  & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00} & 0.00 \scriptsize{$\pm$0.00} \\
+                \texttt{N} & 0.73 \scriptsize{$\pm$0.00} & 1.00 \scriptsize{$\pm$0.00} & 0.84 \scriptsize{$\pm$0.00} \\
+                avg. & 0.53 \scriptsize{$\pm$0.00} & 0.73 \scriptsize{$\pm$0.00} & \textbf{0.61} \scriptsize{$\pm$0.00} \\
+                \bottomrule
+            \end{tabularx}
+        \end{minipage}\newline\newline
+        \texttt{ARG} = \texttt{BETTER} + \texttt{WORSE}, \texttt{N} = \texttt{NONE}
+
 
     \end{frame}
 
     \subsection{Features}
-    \begin{frame}
-        \frametitle{Sentence Embeddings}
-
-    \end{frame}
-
-    \begin{frame}
-        \frametitle{LexNet: Dependency Path I}
-
-    \end{frame}
-
-
-    \begin{frame}
-        \frametitle{LexNet: Dependency Path II}
-
-    \end{frame}
+    %    \begin{frame}
+    %        \frametitle{Sentence Embeddings}
+    %
+    %    \end{frame}
+    %
+    %    \begin{frame}
+    %        \frametitle{LexNet: Dependency Path I}
+    %
+    %    \end{frame}
 
     \begin{frame}
         \frametitle{Other features}
+        \begin{itemize}
+            \item Bag-of-words
+            \item 500 most frequent part-of-speech bi-, tri and four-grams
+            \item Mean word embedding vector (GloVe embeddings)
+            \item Boolean feature capturing the appearance of a comparative adjective
+        \end{itemize}
 
     \end{frame}
 
     \subsection{Training Results}
-
     \begin{frame}
-        \frametitle{Three classes}
-
+        \frametitle{Three classes: F1 score}
+        \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/p-f1-False}}
     \end{frame}
 
 
     \begin{frame}
-        \frametitle{Binary}
+        \frametitle{Three classes: Precision and Recall}
+        \begin{columns}[t]
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={2cm 0 0 0},clip]{images/experiments/p-precision-False}}
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={0 0 2cm 0},clip]{images/experiments/p-recall-False}}
 
+        \end{columns}
     \end{frame}
+
+    \begin{frame}
+        \frametitle{Binary: F1 score}
+        \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/p-f1-True}}
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Binary: Precision and Recall}
+        \begin{columns}[t]
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={2cm 0 0 0},clip]{images/experiments/p-precision-True}}
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={0 0 2cm 0},clip]{images/experiments/p-recall-True}}
+
+        \end{columns}
+    \end{frame}
+
 
 
     \section{Discussion and Future Work}
