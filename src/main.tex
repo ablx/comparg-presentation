@@ -427,7 +427,77 @@
         \end{columns}
     \end{frame}
 
+    \begin{frame}
+        \frametitle{Intermediate Results}
+        \begin{itemize}
+            \item \texttt{WORSE} is hard to recognize
+            \item InferSent, Bag-Of-Words and Mean Word Embeddings have a similar f1 score
+            \item InferSent is more precise on \texttt{WORSE}
+            \item the best f1 score is 24 points above the baseline
+            \item The original LexNet setup is worse than all other, but still above the baseline
+            \item The binary scenario is only slightly better than the three class scenario
+        \end{itemize}
+    \end{frame}
 
+    \subsection{Error analysis}
+    \begin{frame}
+        \frametitle{Error analysis}
+        Errors made by InferSent and LexNet (optimized)
+        \begin{itemize}
+            \item 1311 sentences were incorrectly classified (three class scenario)
+            \item 607 errors were made by both features
+            \item 220 additional were exclusively made by InferSent, 484 by LexNet
+            \item The majority was made on sentences with a high annotation confidence
+            \item Possible problems: questions, negations, missing cue words, comparative sentences which do not compare the objects
+            \item the errors made in the binary scenario are similar (1183 errors, 739 shared with the three-class scenario, 444 new)
+        \end{itemize}
+
+    \end{frame}
+    %=========== HELD OUT HELD OUT
+    \subsection{Evaluation with the held-out data}
+    \frame{\subsectionpage}
+
+    \begin{frame}
+        \frametitle{Three classes: F1 score}
+        \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/hp-f1-False}}
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Three classes: Precision and Recall}
+        \begin{columns}[t]
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={2cm 0 0 0},clip]{images/experiments/hp-precision-False}}
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={0 0 2cm 0},clip]{images/experiments/hp-recall-False}}
+
+        \end{columns}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Binary: F1 score}
+        \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/hp-f1-True}}
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Binary: Precision and Recall}
+        \begin{columns}[t]
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={2cm 0 0 0},clip]{images/experiments/hp-precision-True}}
+            \column{2in}
+            \centerline{\includegraphics[scale=0.31,trim={0 0 2cm 0},clip]{images/experiments/hp-recall-True}}
+
+        \end{columns}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Results}
+        \begin{itemize}
+            \item InferSent is again the best feature
+            \item The LexNet feature did not generalize
+        \end{itemize}
+    \end{frame}
 
     \section{Discussion and Future Work}
     \frame{\sectionpage}
