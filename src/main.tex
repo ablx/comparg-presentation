@@ -7,7 +7,19 @@
 \documentclass[11pt,aspectratio=169]{beamer}
 \usepackage[english]{babel}
 \usepackage{blindtext}
+\usepackage{tabularx,booktabs}
 \usetheme{Copenhagen}
+\usecolortheme{crane}
+\usepackage[autostyle]{csquotes}
+
+\setbeamertemplate{section page}
+{
+\begin{centering}
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+        \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+\end{centering}
+}
 
 
 \title{Comparative Argument Mining}
@@ -15,54 +27,222 @@
 \date{June 26, 2018}
 \begin{document}
     \maketitle
-    \begin{frame}
-        \frametitle{First Slide}
-        Contents of the first slide
-    \end{frame}
-    \begin{frame}
-        \frametitle{Second Slide}
-        Contents of the second slide
-    \end{frame}
+
+    \section{Introduction}
+    \frame{\sectionpage}
 
     \begin{frame}
-        \frametitle{F1 score, three classes}
+        \frametitle{Comparative Argument Mining: An example}
+        Given a sentence and two comparable objects like
+
         \begin{center}
-            \includegraphics[scale=0.3]{images/f1-False}
+            \LARGE \emph{Toyota} is better than \emph{BMW} at\ldots providing reliable, economical auto transport.
         \end{center}
+
+        Decide if
+
+        \begin{enumerate}
+            \item the sentence compares Toyota and BMW
+            \item Toyota wins the comparison or
+            \item BMW wins the comparison
+        \end{enumerate}
+
     \end{frame}
 
     \begin{frame}
-        \frametitle{fsddfs}
-        dssdsadsads
+        \frametitle{Possible Applications}
+
+        \begin{itemize}
+            \item Online comparison portals like \url{Check24.de}
+            \item Sentiment Mining
+            \item Languange Understanding
+        \end{itemize}
+
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Related Work}
+
+    \end{frame}
+
+
+    \section{Creating a data set}
+    \frame{\sectionpage}
+    \subsection{Data Source}
+    \begin{frame}
+        \frametitle{Common Crawl}
+        \begin{itemize}
+            \item CommonCrawl\footnote{\url{http://commoncrawl.org}} is a freely accessible data set of crawled websites
+            \item A preprocessed version\footnote{\cite{Panchenko:2017aa}} was used
+            \begin{itemize}
+                \item English content only (?)
+                \item HTML was removed
+                \item Splitted into sentences
+                \item Duplicates were removed
+            \end{itemize}
+            \item 3,288,963,864 unique sentences; inserted into an Elasticsearch index
+            \item 428,932 sentences contain \emph{is better than}
+        \end{itemize}
+
     \end{frame}
 
     \begin{frame}
-        \frametitle{sdsa}
-        \begin{columns}[t]
-            \column{0.5\textwidth}
-            \blindtext
-            \column{0.5\textwidth}
-            \blindtext
-        \end{columns}
+        \frametitle{Domains}
+        \begin{itemize}
+            \item Comparable object pairs are needed
+            \item Goal: Cover a wide range of different objects
+            \item \emph{Computer Science}: operating systems, abstract concepts, software, \ldots
+            \item \emph{Brands}: cars, food, electronics, \ldots
+            \item \emph{Random}: book authors, soccer teams, universities, \ldots
+
+        \end{itemize}
     \end{frame}
-    \begin{frame}[fragile]
-        \frametitle{sdsa}
+
+    \begin{frame}
+        \frametitle{Obtaining objects}
+        \begin{itemize}
+            \item Computer Science and Brands: \emph{List of \ldots} pages from Wikipedia were used to select suitable objects
+            \item Random
+            \begin{itemize}
+                \item 25 seed words were randomly selected (cork, Hamster, Florida, ninja\ldots)
+                \item JoBimText\footnote{http://ltmaggie.informatik.uni-hamburg.de/jobimtext/} was used to find the 10 most similar words for each seed word
+            \end{itemize}
+            \item Each object was checked against a frequency dictionary, words with a frequency of were removed
+            \item For each object type (Wikipedia source page or seed word), all possible combinations were created.
+        \end{itemize}
+
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Pairs: Examples}
+
+      \begin{tabularx}{\textwidth}{XXX}
+          \toprule
+          Brands & Computer Science & Random \\
+          \midrule
+          Microsoft vs. Apple & Java vs. Python & baseball vs. hockey \\
+          Nikon vs. Leica & Eclipse vs. Netbeans & fishing vs. swimming\\
+          Coca-Cola vs. Pepsi & OpenGL vs. Direct3D & SUV vs. minivan\\
+          Nike vs. Adidas & Integer vs. Float & Kennedy vs. Nixon\\
+          Ibuprofen vs. Advil & USB vs. Bluetooth & plastic vs. wood\\
+          Ford vs. Honda & Oracle vs. MysQL & Harvard vs. Princeton\\
+
+          \bottomrule
+
+      \end{tabularx}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Sentence Sampling}
+
+        \begin{itemize}
+            \item 21 words (like better, worse, slower, inferior, cooler) were selected as comparison cue words
+            \item for 90 percent of the pairs, the index was queried for sentences containing both objects and one cue word
+            \item for the remaining 10 percent, the cue word was omitted
+            \item 2500 sentences for each domain were randomly sampled from the result
+        \end{itemize}
+
+    \end{frame}
+    
+    \begin{frame}
+      \frametitle{Sentence Sampling: Examples}
+        \begin{itemize}
+            \item \enquote{There is no doubt \textbf{Python} is better than \textbf{Ruby} at in aspect you will pick.}
+            \item \enquote{Goodnight \textbf{NetBeans}, Hello \textbf{Eclipse}}
+            \item \enquote{\textbf{stone} is harder than \textbf{metal}}
+            \item \enquote{arrrggghh...\textbf{Python} is a terrible language - only \textbf{Perl} sucks worse.}
+            \item \enquote{Good to see again a \textbf{Renault} ahead of a \textbf{Ferrari}.}
+        \end{itemize}
+    \end{frame}
+
+    \subsection{Crowdsourcing}
+    \begin{frame}
+        \frametitle{Setup}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Results: Brands}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Results: Computer Science}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Results: Random}
+
+    \end{frame}
 
 
+    \begin{frame}
+        \frametitle{Results: All}
 
-        \begin{figure}[ht]
-            \begin{minipage}[b]{0.47\linewidth}
-                \centering
-                \includegraphics[width=\textwidth]{images/f1-False}
-                \caption{default}
-            \end{minipage}
-            \hspace{0.5cm}
-            \begin{minipage}[b]{0.47\linewidth}
-                \centering
-                \includegraphics[width=\textwidth]{images/f1-False}
-                \caption{default}
-            \end{minipage}
-        \end{figure}
+    \end{frame}
+
+    \section{Classification}
+    \frame{\sectionpage}
+    \subsection{Setup}
+    \begin{frame}
+        \frametitle{Algorithms}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Evaluation}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Baseline}
+
+    \end{frame}
+
+    \subsection{Features}
+    \begin{frame}
+        \frametitle{Sentence Embeddings}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{LexNet: Dependency Path I}
+
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{LexNet: Dependency Path II}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Other features}
+
+    \end{frame}
+
+    \subsection{Training Results}
+
+    \begin{frame}
+        \frametitle{Three classes}
+
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{Binary}
+
+    \end{frame}
+
+
+    \section{Discussion and Future Work}
+    \frame{\sectionpage}
+    \begin{frame}
+        \frametitle{abc}
+
     \end{frame}
 
 \end{document}
