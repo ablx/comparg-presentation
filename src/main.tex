@@ -4,7 +4,7 @@
 %%
 
 % Preamble
-\documentclass[11pt,aspectratio=169]{beamer}
+\documentclass[11pt,aspectratio=169,usenames,dvipsnames]{beamer}
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage{tabularx,booktabs}
@@ -16,7 +16,7 @@
 \setbeamertemplate{navigation symbols}{}
 \usepackage{nicefrac}
 \usepackage{framed}
-\usepackage{graphicx}
+\setbeamercovered{transparent}
 \setbeamertemplate{section page}
 {
 \begin{centering}
@@ -25,12 +25,13 @@
     \end{beamercolorbox}
 \end{centering}
 }
-
+%\usepackage{beamerthemeshadow}
 
 \setbeamertemplate{subsection page}
 {
 \begin{centering}
     % \begin{beamercolorbox}[sep=5pt,center]{part title}
+    \par
     \usebeamerfont{section title}\insertsubsection\par
     %  \end{beamercolorbox}
 \end{centering}
@@ -46,38 +47,31 @@
     \section{Introduction}
     \frame{\sectionpage}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Comparative Argument Mining: An example}
         Given a sentence and two comparable objects like
 
         \begin{center}
-            \LARGE \emph{Toyota} is better than \emph{BMW} at\ldots providing reliable, economical auto transport.
+            \LARGE \textcolor{orange}{Toyota} is better than \textcolor{RoyalBlue}{BMW} at\ldots providing reliable, economical auto transport.
         \end{center}
-
+        \pause
         Decide if
-
-        \begin{enumerate}
-            \item the sentence compares Toyota and BMW
-            \item Toyota wins the comparison or
-            \item BMW wins the comparison
-        \end{enumerate}
-
-    \end{frame}
-
-    \begin{frame}
-        \frametitle{Possible Applications}
-
         \begin{itemize}
-            \item Online comparison portals like \url{Check24.de}
-            \item Sentiment Mining
-            \item Languange Understanding
+            \item the sentence compares \textcolor{orange}{Toyota} and \textcolor{RoyalBlue}{BMW}   \pause
+            \item \textcolor{orange}{Toyota} wins the comparison or   \pause
+            \item \textcolor{RoyalBlue}{BMW} wins the comparison
         \end{itemize}
 
     \end{frame}
 
-
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Related Work}
+        \begin{itemize}
+            \item Little work on comparative argument mining
+            \item Specific to a narrow domain, e.g. biomedical
+            \item See \cite{fiszman2007interpreting}, \cite{Park:2012:ICC:2391171.2391173} and \cite{gupta2017identifying}
+            \item Patterns and rule based systems
+        \end{itemize}
 
     \end{frame}
 
@@ -86,8 +80,29 @@
     \frame{\sectionpage}
     \subsection{Data Source}
     \frame{\subsectionpage}
-    \begin{frame}
-        \frametitle{Common Crawl}
+
+    \begin{frame}[t]
+        \frametitle{Needed Data}
+        English pieces of text
+        \begin{enumerate}
+            \item with a high chance of being comparative
+            \item containing at least two known, comparable objects\\
+            \begin{scriptsize}
+                (Not like: \enquote{\textcolor{ForestGreen}{This} is better than \textcolor{RoyalBlue}{BMW} \ldots})
+            \end{scriptsize}
+            \item understandable to many people
+        \end{enumerate}\pause
+
+        Objects, which are
+        \begin{enumerate}
+            \item comparable on at least on property
+            \item known by many people
+        \end{enumerate}\pause
+        Everything should be as domain unspecific as possible.
+    \end{frame}
+
+    \begin{frame}[t]
+        \frametitle{English text: Common Crawl}
         \begin{itemize}
             \item CommonCrawl\footnote{\url{http://commoncrawl.org}} is a freely accessible data set of crawled websites
             \item A preprocessed version\footnote{\cite{Panchenko:2017aa}} was used
@@ -96,41 +111,41 @@
                 \item HTML was removed
                 \item Splitted into sentences
                 \item Duplicates were removed
-            \end{itemize}
+            \end{itemize}\pause
             \item 3,288,963,864 unique sentences; inserted into an Elasticsearch index
-            \item 428,932 sentences contain \emph{is better than}
+            \item Comparisons: 428,932 sentences contain \emph{is better than}
         \end{itemize}
 
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Domains}
+    \begin{frame}[t]
+        \frametitle{Objects and Domains}
         \begin{itemize}
-            \item Comparable object pairs are needed
-            \item Goal: Cover a wide range of different objects
-            \item \emph{Computer Science}: operating systems, abstract concepts, software, \ldots
-            \item \emph{Brands}: cars, food, electronics, \ldots
-            \item \emph{Random}: book authors, soccer teams, universities, \ldots
+            \item The objects were taken from three domains
+            \item \textbf{Computer Science}: operating systems, abstract concepts, software, \ldots
+            \item \textbf{Brands}: cars, food, electronics, \ldots
+            \item \textbf{Random}: book authors, soccer teams, universities, \ldots
 
         \end{itemize}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Obtaining objects}
         \begin{itemize}
-            \item Computer Science and Brands: \emph{List of \ldots} pages from Wikipedia were used to select suitable objects
+            \item Wikipedia's \enquote{List of \ldots} pages were used to select suitable objects for Computer Science and Brands\pause
             \item Random
             \begin{itemize}
                 \item 25 seed words were randomly selected (cork, Hamster, Florida, ninja\ldots)
                 \item JoBimText\footnote{http://ltmaggie.informatik.uni-hamburg.de/jobimtext/} was used to find the 10 most similar words for each seed word
-            \end{itemize}
-            \item Each object was checked against a frequency dictionary, words with a frequency of were removed
+            \end{itemize}\pause
+            \item Each object was checked against a frequency dictionary
+            \item Objects with a frequency of zero were removed
             \item For each object type (Wikipedia source page or seed word), all possible combinations were created.
         \end{itemize}
 
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Pairs: Examples}
 
         \begin{tabularx}{\textwidth}{XXX}
@@ -150,35 +165,35 @@
 
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Sentence Sampling}
 
         \begin{itemize}
-            \item 21 words (like better, worse, slower, inferior, cooler) were selected as comparison cue words
-            \item for 90 percent of the pairs, the index was queried for sentences containing both objects and one cue word
-            \item for the remaining 10 percent, the cue word was omitted
+            \item 21 words (like better, worse, slower, inferior, cooler) were selected as comparison \textbf{cue words}\pause
+            \item for 90 percent of the pairs, the index was queried for sentences containing both objects and at least one cue word
+            \item for the remaining 10 percent, the cue word was omitted\pause
             \item 2500 sentences for each domain were randomly sampled from the result
         \end{itemize}
 
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Sentence Sampling: Examples}
         \begin{itemize}
-            \item \enquote{There is no doubt \textbf{Python} is better than \textbf{Ruby} at in aspect you will pick.}
-            \item \enquote{Goodnight \textbf{NetBeans}, Hello \textbf{Eclipse}}
-            \item \enquote{\textbf{stone} is harder than \textbf{metal}}
-            \item \enquote{arrrggghh...\textbf{Python} is a terrible language - only \textbf{Perl} sucks worse.}
-            \item \enquote{Good to see again a \textbf{Renault} ahead of a \textbf{Ferrari}.}
+            \item \enquote{There is no doubt \textcolor{orange}{Python} is better than \textcolor{RoyalBlue}{Ruby} at any in aspect you will pick.}
+            \item \enquote{Goodnight \textcolor{orange}{NetBeans}, Hello \textcolor{RoyalBlue}{Eclipse}}
+            \item \enquote{\textcolor{orange}{stone} is harder than \textcolor{RoyalBlue}{metal}}
+            \item \enquote{arrrggghh...\textcolor{orange}{Python} is a terrible language - only \textcolor{RoyalBlue}{Perl} sucks worse.}
+            \item \enquote{Good to see again a \textcolor{orange}{Renault} ahead of a \textcolor{RoyalBlue}{Ferrari}.}
         \end{itemize}
     \end{frame}
 
     \subsection{Crowdsourcing}
     \frame{\subsectionpage}
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Task Design}
         \begin{itemize}
-            \item Each domain was annotated via the crowdsourcing platform Crowdflower\footnote{\url{https://crowdflower.com}}
+            \item All sentences were annotated via the crowdsourcing platform Crowdflower\footnote{\url{https://crowdflower.com}}
             \item A prestudy was conducted to assess the quality of the annotation guidelines and the sentence selection process
             \item In the prestudy, about 25 percent were labeled as comparative
             \item Each sentence was annotated by at least five annotators
@@ -186,59 +201,106 @@
 
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Task Design}
+    \begin{frame}[t]
+        \frametitle{Task Design: Problems}
         Initially, the annotators were asked to answer the question:
         \includegraphics[scale=0.3]{images/q1other}
     \end{frame}
 
 
-    \begin{frame}
-        \frametitle{Task Design}
+    \begin{frame}[t]
+        \frametitle{Task Design: Problems}
+        \only<1-2>{
         \begin{itemize}
-            \item After 750 annotated sentences per domain, \texttt{OTHER} was dropped
             \item People confused \texttt{OTHER} with \texttt{NONE} frequently
-            \item People were dissatisfied because the distinction is to hard
+            \item People were dissatisfied because the distinction was to hard\pause
+            \item After 750 annotated sentences per domain, \texttt{OTHER} was dropped
             \item \texttt{OTHER} and \texttt{NONE} were hardly distinguishable in first classification experiments
             \item \texttt{OTHER} was merged into \texttt{NONE} for the classification experiments
         \end{itemize}
+        }
+
+        \only<3>{
+        \begin{itemize}
+            \item The annotation guidelines stated that all questions should be labelled as \texttt{NONE}.
+            \begin{scriptsize}
+                (For instance, \enquote{Is \textbf{Python} better than \textbf{Ruby}?})
+            \end{scriptsize}
+            \item This was frequently overlooked by the annotators.
+        \end{itemize}
+        }
     \end{frame}
+
+
 
 
     \begin{frame}
         \frametitle{Results: Brands}
-        \begin{center}
-            \includegraphics[scale=0.3]{images/Brands-dist}
-        \end{center}
+        \begin{columns}
+            \column{2in}
+            \begin{itemize}
+                \item 2335 sentences in total
+                \item 571 comparative sentences (24 percent)
+            \end{itemize}
+            \column{3in}
+            \includegraphics[scale=0.45,trim={1cm 0 2cm 1cm},clip]{images/Brands-dist}
+        \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Results: Computer Science}
-        \begin{center}
-            \includegraphics[scale=0.3]{images/Compsci-dist.pdf}
-        \end{center}
+        \begin{columns}
+            \column{2in}
+            \begin{itemize}
+                \item 2425 sentences in total
+                \item 829 comparative sentences (34 percent)
+            \end{itemize}
+            \column{3in}
+            \includegraphics[scale=0.45,trim={1cm 0 2cm 1cm},clip]{images/Compsci-dist.pdf}
+        \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Results: Random}
-        \begin{center}
-            \includegraphics[scale=0.3]{images/Random-dist.pdf}
-        \end{center}
+        \begin{columns}
+            \column{2in}
+            \begin{itemize}
+                \item 2439 sentences in total
+                \item 557 comparative sentences (22 percent)
+            \end{itemize}
+            \column{3in}
+            \includegraphics[scale=0.45,trim={1cm 0 2cm 1cm},clip]{images/Random-dist.pdf}
+        \end{columns}
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Results: All}
-        \begin{center}
-            \includegraphics[scale=0.3]{images/Alldomains-dist.pdf}
-        \end{center}
+    \begin{frame}[t]
+        \frametitle{Results: All Domains}
+        \begin{columns}
+            \column{2in}
+            \begin{itemize}
+                \item 7199 sentences in total
+                \item 1957 comparative sentences (27 percent)
+                \item the class \texttt{BETTER} is more than two times bigger than \texttt{WORSE}
+            \end{itemize}
+            \column{3in}
+            \includegraphics[scale=0.45,trim={1cm 0 2cm 1cm},clip]{images/Alldomains-dist.pdf}
+        \end{columns}
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Results: Confidence}
+    \begin{frame}[t]
+        \frametitle{Results: All Domains}
 
-        Annotation confidence for all domains. The confidence is calculated as $\nicefrac{\text{judgments for majority class}}{\text{total judgments}}$.
 
-        \begin{center}
+
+        \begin{columns}
+            \column{2in}
+            \begin{itemize}
+                \item 7199 sentences in total
+                \item 1957 comparative sentences (27 percent)
+                \item the class \texttt{BETTER} is more than two times bigger than \texttt{WORSE}
+            \end{itemize}
+            \column{3in}
+            Annotation confidence for all domains. The confidence is calculated as $\nicefrac{\text{judgments for majority class}}{\text{total judgments}}$.
             \begin{tabular}{@{}rrr@{}}
                 \toprule
                 Confidence & Sentences & \% of data set \\
@@ -253,28 +315,24 @@
                 \bottomrule
             \end{tabular}
 
-        \end{center}
+        \end{columns}
+
+
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Results}
-        \begin{itemize}
-            \item 7199 annotated sentences
-            \item 27 percent of the sentences are comparative
-            \item The annotators agreed on the same class for 5111 sentences
-            \item
-        \end{itemize}
-    \end{frame}
 
     \section{Classification}
     \frame{\sectionpage}
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Algorithms}
         \begin{columns}[t]
             \column{2in}
             \begin{itemize}
                 \item 13 classification algorithms were tested with a bag-of-words-model
-                \item XGBoost (gradient boosted decision trees) worked best
+                \item XGBoost worked best
+                \begin{scriptsize}
+                    (gradient boosted decision trees; presented in \cite{DBLP:journals/corr/ChenG16})
+                \end{scriptsize}
                 \item  The graphic shows the f1 score and standard derivation (black bar).
             \end{itemize}
             \column{3.5in}
@@ -285,26 +343,25 @@
         \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Setup}
         \begin{itemize}
-            \item XGBoost with 1000 base estimators was used in all further experiments
-            \item Exhaustive grid search and randomized search on XGBoost's parameters did not find better parameter values
-            \item The 7199 sentences were split into a development (5759) and held-out (1440).
-            \item All experiments were conducted on the development set and evalutated with k-folds cross validation ($k = 5$)
-            \item Two setups: classification with three classes and binary classification (\texttt{BETTER} and \texttt{WORSE} were combined to \texttt{ARG})
+            \item XGBoost with 1000 base estimators was used in all experiments
+            \item Exhaustive grid search and randomized search on XGBoost's parameters did not find better parameter values\pause
+            \item The 7199 sentences were split into a development (5759) and held-out (1440) set.
+            \item All experiments were conducted on the development set and evalutated with k-folds cross validation ($k = 5$)\pause
+            \item Two setups: classification with \textbf{three classes} and \textbf{binary classification} (\texttt{BETTER} and \texttt{WORSE} were combined to \texttt{ARG})
         \end{itemize}
 
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Baseline: Three classes}
 
         \begin{minipage}{.5\linewidth}
-            \caption{Random (stratified) baseline}
             \label{tbl:3stratifiedbaseline}
             \centering
-
+            Random (stratified) baseline\newline\newline
             \begin{tabularx}{0.97\linewidth}{Xrrrr}
                 \toprule
                 & precision & recall & f1 score                     \\ \midrule
@@ -318,8 +375,7 @@
         \end{minipage}%
         \begin{minipage}{.5\linewidth}
             \centering
-            \caption{Majority class baseline}
-            \label{tbl:3majoritybaseline}
+            Most frequent class baseline\newline\newline
             \begin{tabularx}{0.97\linewidth}{Xrrrr}
                 \toprule
                 & precision & recall & f1 score                                    \\ \midrule
@@ -333,15 +389,14 @@
         \texttt{B} = \texttt{BETTER}, \texttt{W} = \texttt{WORSE}, \texttt{N} = \texttt{NONE},
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Baseline: Binary}
 
 
         \begin{minipage}{.5\linewidth}
-            \caption{Random (stratified) baseline}
-            \label{tbl:binmaj}
-            \centering
 
+            \centering
+            Random (stratified) baseline\newline\newline
             \begin{tabularx}{0.97\linewidth}{Xrrrr}
                 \toprule
                 & precision & recall & f1 score                              \\ \midrule
@@ -354,8 +409,7 @@
         \end{minipage}%
         \begin{minipage}{.5\linewidth}
             \centering
-            \caption{Majority class baseline}
-            \label{tbl:binstrat}
+            Most frequent class baseline\newline\newline
             \begin{tabularx}{0.97\linewidth}{Xrrrr}
                 \toprule
                 & precision & recall & f1 score                     \\ \midrule
@@ -371,35 +425,126 @@
     \end{frame}
 
     \subsection{Features}
-    %    \begin{frame}
-    %        \frametitle{Sentence Embeddings}
-    %
-    %    \end{frame}
-    %
-    %    \begin{frame}
-    %        \frametitle{LexNet: Dependency Path I}
-    %
-    %    \end{frame}
+    \frame{\subsectionpage}
+    \begin{frame}[t]
+        \frametitle{Sentence Embeddings}
+        \begin{itemize}
+            \item Dense vector representation for phrases, similar to word embeddings\pause
+            \item Several approaches, for instance SkipThrough \cite{NIPS2015_5950}, Paragraph Vectors \cite{Le:2014aa} and \textbf{InferSent} \cite{Conneau:2017aa}
+            \item A pretrained InferSent model\footnote{https://github.com/facebookresearch/InferSent} was used in the thesis
+        \end{itemize}
 
-    \begin{frame}
+
+    \end{frame}
+
+    \begin{frame}[t]
+        \begin{columns}
+            \column{2.8in}
+            \begin{itemize}
+                \item<1-> Neural Network trained on the Stanford Natural Language Inference (SNLI) corpus
+                \item<1-> SNLI contains 570k sentence pairs labelled as contradiction, entailment or neutral
+                \item<2-> BiLSTM with max-pooling and 4096 neurons as encoders
+                \item<2-> tested on a wide range of tasks, outperforms SkipThrough and Paragraph Vectors
+            \end{itemize}
+            \column{3in}
+            \only<1->{
+            \includegraphics[scale=0.5,trim={0cm 0 0cm 0cm},clip]{images/nli}}
+        \end{columns}
+    \end{frame}
+
+    \begin{frame}[t]
+        \frametitle{HypeNet and LexNet}
+        \begin{itemize}
+            \item HypeNet\footnote{\cite{DBLP:conf/acl/ShwartzGD16}} combines distributional information (word embeddings) and (dependency) path-based information to find hypernyms
+            \item LexNet\footnote{\cite{DBLP:journals/corr/ShwartzD16}} is a generalisation of HypeNet to find multiple semantic relations\pause
+            \item HypeNet creates a string representation of the dependency path between two words
+            \item the string representations are then encoded using an LSTM
+            \item the average of all paths for each word pair is used as the path feature
+        \end{itemize}
+    \end{frame}
+
+
+    \begin{frame}[t]
+        \frametitle{HypeNet and LexNet: Example}
+        \begin{center}
+            \includegraphics[scale=0.7,trim={0cm 0.5cm 0cm 0.25cm},clip]{images/hypenet_example}
+        \end{center}
+
+        \begin{itemize}
+            \item \texttt{X/NOUN/nsubj/< be/VERB/ROOT/- Y/NOUN/attr/}
+            \item Each node contains lemma, part of speech, dependency label and the edge direction
+            \item Expectation: path embeddings add valuable information to sentence embeddings
+
+        \end{itemize}
+    \end{frame}
+
+
+    \begin{frame}[t]
+        \frametitle{HypeNet and LexNet: Features}
+        \begin{itemize}
+            \item Two features based on HypeNet paths:\pause
+            \item \textbf{LexNet (original)} creates paths as described in the paper
+            \begin{itemize}
+                \item maximum length of four
+                \item the first object must be reachable from following only left edges, starting from the lowest common head
+                \item the second object must be reachable from following only right edges 
+                \item 1519 sentences without a path\pause
+            \end{itemize}
+            \item \textbf{LexNet (optimized)}
+            \begin{itemize}
+                \item maximum length of sixteen
+                \item no restrictions on the direction
+                \item 399 sentences without a path
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+
+
+
+
+    \begin{frame}[t]
         \frametitle{Other features}
         \begin{itemize}
             \item Bag-of-words
             \item 500 most frequent part-of-speech bi-, tri and four-grams
             \item Mean word embedding vector (GloVe embeddings)
-            \item Boolean feature capturing the appearance of a comparative adjective
+            \item Boolean feature capturing the appearance of a comparative adjective (Contains JJR)
         \end{itemize}
+      
+    \end{frame}
+    
+    \begin{frame}[t]
+    \frametitle{Preprocessing}
+    Selection of the sentence part
+        \begin{itemize}
+    \item the whole sentence
+    \item all words between the first and the second object
+    \item all words before the first object
+    \item all words after the second object\pause
+    \end{itemize}
+    Object replacement
+    \begin{itemize}
+    \item leave the objects
+    \item remove both objects
+    \item replace both objects with the term \texttt{OBJECT}
+    \item replace the first object with \texttt{OBJECT\_A} and the second with \texttt{OBJECT\_B} 
+    \end{itemize}
+    
+
 
     \end{frame}
 
+
     \subsection{Training Results}
-    \begin{frame}
+    \frame{\subsectionpage}
+    \begin{frame}[t]
         \frametitle{Three classes: F1 score}
         \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/p-f1-False}}
     \end{frame}
 
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Three classes: Precision and Recall}
         \begin{columns}[t]
             \column{2in}
@@ -410,13 +555,13 @@
         \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Binary: F1 score}
         \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/p-f1-True}}
     \end{frame}
 
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Binary: Precision and Recall}
         \begin{columns}[t]
             \column{2in}
@@ -427,43 +572,57 @@
         \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Intermediate Results}
         \begin{itemize}
-            \item \texttt{WORSE} is hard to recognize
+            \item As expected, \texttt{WORSE} is hard to recognize
             \item InferSent, Bag-Of-Words and Mean Word Embeddings have a similar f1 score
-            \item InferSent is more precise on \texttt{WORSE}
+            \item InferSent is more precise on \texttt{WORSE}\pause
             \item the best f1 score is 24 points above the baseline
-            \item The original LexNet setup is worse than all other, but still above the baseline
-            \item The binary scenario is only slightly better than the three class scenario
+            \item the original LexNet setup the worst, but still above the baseline
+            \item the binary scenario is only slightly better than the three class scenario\pause
+            \item Using only the middle part of the sentence \textbf{increases the f1 score by 6-10 points}
+            \item The objects contribute only little to the result; removing or replacing did not alter the f1 score by more than 0.005 points
         \end{itemize}
     \end{frame}
 
     \subsection{Error analysis}
-    \begin{frame}
-        \frametitle{Error analysis}
+    \begin{frame}[t]
+        \frametitle{Error analysis 1}
         Errors made by InferSent and LexNet (optimized)
         \begin{itemize}
-            \item 1311 sentences were incorrectly classified (three class scenario)
-            \item 607 errors were made by both features
-            \item 220 additional were exclusively made by InferSent, 484 by LexNet
-            \item The majority was made on sentences with a high annotation confidence
-            \item Possible problems: questions, negations, missing cue words, comparative sentences which do not compare the objects
-            \item the errors made in the binary scenario are similar (1183 errors, 739 shared with the three-class scenario, 444 new)
+            \item<1> 1311 sentences were incorrectly classified (three class scenario)
+            \item<1> 607 errors were made by both features
+            \item<1> 220 additional were exclusively made by InferSent, 484 by LexNet
+            \item<1> the errors made in the binary scenario are similar (1183 errors, 739 shared with the three-class scenario, 444 new)
+           
         \end{itemize}
 
     \end{frame}
+    
+    
+    \begin{frame}[t]
+        \frametitle{Error analysis 2}
+        
+        \begin{itemize}
+         \item The majority of errors was made on sentences with a high annotation confidence
+            \item Identified problems: questions, negations, missing cue words, comparative sentences which do not compare the objects, missing context / knowledge
+            \item \texttt{WORSE} was confused with \texttt{NONE} more often than with \texttt{BETTER}
+        \end{itemize}
+
+        \end{frame}
+
     %=========== HELD OUT HELD OUT
     \subsection{Evaluation with the held-out data}
     \frame{\subsectionpage}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Three classes: F1 score}
         \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/hp-f1-False}}
     \end{frame}
 
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Three classes: Precision and Recall}
         \begin{columns}[t]
             \column{2in}
@@ -474,13 +633,13 @@
         \end{columns}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Binary: F1 score}
         \centerline{\includegraphics[scale=0.45,trim={0 0 0 0.5cm},clip]{images/experiments/hp-f1-True}}
     \end{frame}
 
 
-    \begin{frame}
+    \begin{frame}[t]
         \frametitle{Binary: Precision and Recall}
         \begin{columns}[t]
             \column{2in}
@@ -491,19 +650,51 @@
         \end{columns}
     \end{frame}
 
-    \begin{frame}
-      \frametitle{Results}
+    \begin{frame}[t]
+        \frametitle{Results}
         \begin{itemize}
             \item InferSent is again the best feature
-            \item The LexNet feature did not generalize
+            \item The LexNet feature did not generalize\pause
+            \begin{itemize}
+                \item 2344 unique paths for 5759 sentences (training set)
+                \item 594 unique paths for 1441 sentences (held out set)
+                \item training and held had only 81 paths in common
+            \end{itemize}
+            \item No feature combination was better than InferSent
         \end{itemize}
     \end{frame}
 
-    \section{Discussion and Future Work}
+    \section{Conclusion and Future Work}
     \frame{\sectionpage}
+    \begin{frame}[t]
+        \frametitle{Conclusion}
+        \begin{itemize}
+        \item The best feature could yield an f1 score of 0.85
+        \item Simple features (bag-of-words) perform equal to more complex features
+        \item HypeNet needs way more training data\pause
+        \item The objects are not important for the classification at all
+        \item Preprocessing is crucial to achieve good scores\pause
+        \item Contrary to the expectations \texttt{WORSE} is more similar to \texttt{NONE} than to \texttt{BETTER}
+        \item All in all, the crowd sourcing and classification worked satisfactory
+        \end{itemize}
+    \end{frame}
+    
     \begin{frame}
-        \frametitle{abc}
+        \begin{itemize}
+        \frametitle{Future work}
+    \item More data!
+    \item Add more features to capture special cases like questions
+    \item Use surrounding sentences for context information and coreference resolution
+    \item Test in a real world application
+    \end{itemize}
+    \end{frame}
 
+
+
+    \begin{frame}[allowframebreaks]
+        \frametitle{References}
+        \bibliographystyle{apalike}
+        \bibliography{main}
     \end{frame}
 
 \end{document}
