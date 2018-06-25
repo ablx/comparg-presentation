@@ -5,11 +5,12 @@
 
 % Preamble
 \documentclass[11pt,aspectratio=169,usenames,dvipsnames]{beamer}
+%\documentclass[11pt,aspectratio=169,usenames,dvipsnames,handout]{beamer}
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage{tabularx,booktabs}
 \usetheme{Copenhagen}
-\usecolortheme{crane}
+%\usecolortheme{crane}
 \usepackage[autostyle]{csquotes}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -68,7 +69,7 @@
         \frametitle{Related Work}
         \begin{itemize}
             \item Little work on comparative argument mining
-            \item Specific to a narrow domain, e.g. biomedical
+            \item Specific to a narrow domain, e.g. drug therapy
             \item See \cite{fiszman2007interpreting}, \cite{Park:2012:ICC:2391171.2391173} and \cite{gupta2017identifying}
             \item Patterns and rule based systems
         \end{itemize}
@@ -83,26 +84,25 @@
 
     \begin{frame}[t]
         \frametitle{Needed Data}
-        English pieces of text
-        \begin{enumerate}
+        English sentences
+                \begin{enumerate}
             \item with a high chance of being comparative
-            \item containing at least two known, comparable objects\\
+            \item containing at least two comparable objects\\
             \begin{scriptsize}
                 (Not like: \enquote{\textcolor{ForestGreen}{This} is better than \textcolor{RoyalBlue}{BMW} \ldots})
             \end{scriptsize}
-            \item understandable to many people
         \end{enumerate}\pause
 
         Objects, which are
         \begin{enumerate}
-            \item comparable on at least on property
+            \item comparable on at least one property
             \item known by many people
         \end{enumerate}\pause
         Everything should be as domain unspecific as possible.
     \end{frame}
 
     \begin{frame}[t]
-        \frametitle{English text: Common Crawl}
+        \frametitle{English sentences: CommonCrawl}
         \begin{itemize}
             \item CommonCrawl\footnote{\url{http://commoncrawl.org}} is a freely accessible data set of crawled websites
             \item A preprocessed version\footnote{\cite{Panchenko:2017aa}} was used
@@ -112,7 +112,7 @@
                 \item Duplicates were removed
             \end{itemize}\pause
             \item 3,288,963,864 unique sentences; inserted into an Elasticsearch index
-            \item Comparisons: 428,932 sentences contain \emph{is better than}
+            \item Comparisons: 428,932 sentences contain \enquote{is better than}
         \end{itemize}
 
     \end{frame}
@@ -120,10 +120,12 @@
     \begin{frame}[t]
         \frametitle{Objects and Domains}
         \begin{itemize}
-            \item The objects were taken from three domains
+            \item The objects were taken from three domains:
+            \begin{enumerate}
             \item \textbf{Computer Science}: operating systems, abstract concepts, software, \ldots
             \item \textbf{Brands}: cars, food, electronics, \ldots
             \item \textbf{Random}: book authors, soccer teams, universities, \ldots
+            \end{enumerate}
             \item 271 pairs in total
 
         \end{itemize}
@@ -132,15 +134,15 @@
     \begin{frame}[t]
         \frametitle{Obtaining objects}
         \begin{itemize}
-            \item Wikipedia's \enquote{List of \ldots} pages were used to select suitable objects for Computer Science and Brands\pause
+            \item Wikipedia's \enquote{List of \ldots} pages were used to select suitable objects for Computer Science and Brands.\pause
             \item Random
             \begin{itemize}
-                \item 25 seed words were randomly selected (cork, Hamster, Florida, ninja\ldots)
+                \item 25 seed words were randomly selected (e.g. cork, Hamster, Florida, ninja\ldots)
                 \item JoBimText\footnote{http://ltmaggie.informatik.uni-hamburg.de/jobimtext/} was used to find the 10 most similar words for each seed word
             \end{itemize}\pause
-            \item Each object was checked against a frequency dictionary
-            \item Objects with a frequency of zero were removed
-            \item For each object type (Wikipedia source page or seed word), all possible combinations were created.
+            \item Each object was checked against a frequency dictionary.
+            \item Objects with a frequency of zero were removed.
+            \item All possible combinations for each object type (Wikipedia page or seed word) were created.
         \end{itemize}
 
     \end{frame}
@@ -169,9 +171,9 @@
         \frametitle{Sentence Sampling}
 
         \begin{itemize}
-            \item 21 words (like better, worse, slower, inferior, cooler) were selected as comparison \textbf{cue words}\pause
-            \item for 90 percent of the pairs, the index was queried for sentences containing both objects and at least one cue word
-            \item for the remaining 10 percent, the cue word was omitted\pause
+            \item 21 words (e.g. better, worse, slower, inferior, cooler) were selected as \textbf{cue words} for comparisons\pause
+            \item for 90 percent of the pairs, the index was queried for sentences containing both objects of the pair and at least one cue word
+            \item the cue word was omitted for the remaining 10 percent\pause
             \item 2500 sentences for each domain were randomly sampled from the result
         \end{itemize}
 
@@ -195,7 +197,7 @@
         \begin{itemize}
             \item All sentences were annotated via the crowdsourcing platform Crowdflower\footnote{\url{https://crowdflower.com}}.
             \item A prestudy was conducted to assess the quality of the annotation guidelines and the sentence selection process.
-            \item In the prestudy, about 25 percent were labeled as comparative.
+            \item About 25 percent were labeled as comparative in the prestudy.
             \item Each sentence was annotated by at least five annotators.
         \end{itemize}
 
@@ -212,12 +214,12 @@
         \frametitle{Task Design: Problems}
         \only<1-2>{
         \begin{itemize}
-            \item People confused \texttt{OTHER} with \texttt{NONE} frequently
-            \item People were dissatisfied because the distinction was to hard\pause
-                   \item \texttt{OTHER} and \texttt{NONE} were hardly distinguishable in first classification experiments
+            \item People confused \texttt{OTHER} with \texttt{NONE} frequently.
+            \item People were dissatisfied because the choice between the two labels was too difficult.\pause
+                   \item \texttt{OTHER} and \texttt{NONE} were hardly distinguishable in first classification experiments.
 
-            \item After 750 annotated sentences per domain, \texttt{OTHER} was dropped
-                 \item \texttt{OTHER} was merged into \texttt{NONE} for the classification experiments
+            \item After 750 annotated sentences per domain, \texttt{OTHER} was dropped.
+                 \item \texttt{OTHER} was merged into \texttt{NONE} for the classification experiments.
         \end{itemize}
         }
 
@@ -323,7 +325,11 @@
 
 
     \section{Classification}
-    \frame{\sectionpage}
+        \frame{\sectionpage}
+    
+    \subsection{Setup}
+    \frame{\subsectionpage}
+
     
     
         \begin{frame}[t]
@@ -332,10 +338,10 @@
             \item The 7199 sentences were split into a development (5759) and held-out (1440) set.
             \item All experiments were conducted on the development set and evalutated with k-folds cross validation ($k = 5$)\pause
             \item Two setups: 
-            \begin{itemize}
+            \begin{enumerate}
             \item \textbf{Three classes}: \texttt{NONE}, \texttt{BETTER} and \texttt{WORSE}
             \item\textbf{Binary}: \texttt{NONE} and \texttt{ARG} (= \texttt{BETTER} $\cup$ \texttt{WORSE})
-            \end{itemize}
+            \end{enumerate}
         \end{itemize}
 
     \end{frame}
@@ -442,7 +448,7 @@
             \item Bag-of-words
             \item 500 most frequent part-of-speech bi-, tri and four-grams
             \item Mean word embedding vector (GloVe vectors, size 300)
-            \item Boolean feature capturing the appearance of a comparative adjective (Contains JJR)
+            \item A boolean feature capturing the appearance of a comparative adjective (Contains JJR)
             \item Sentence Embeddings
             \item Dependency Paths
         \end{itemize}
@@ -467,7 +473,8 @@
                 \item<1-> Neural Network trained on the Stanford Natural Language Inference (SNLI) corpus
                 \item<1-> SNLI contains 570k sentence pairs labelled as contradiction, entailment or neutral
                 \item<2-> BiLSTM with max-pooling and 4096 neurons as encoders
-                \item<2-> tested on a wide range of tasks, outperforms SkipThrough and Paragraph Vectors
+                \item<2-> tested on a wide range of tasks
+                \item<2->  outperforms SkipThrough and Paragraph Vectors
             \end{itemize}
             \column{3in}
             \only<1->{
@@ -478,11 +485,11 @@
     \begin{frame}[t]
         \frametitle{HypeNet and LexNet}
         \begin{itemize}
-            \item HypeNet\footnote{\cite{DBLP:conf/acl/ShwartzGD16}} combines word embeddings and (dependency) path-based information to check if two words are hypernyms
-            \item LexNet\footnote{\cite{DBLP:journals/corr/ShwartzD16}} is a generalisation of HypeNet to find multiple semantic relations\pause
+            \item HypeNet\footnote{\cite{DBLP:conf/acl/ShwartzGD16}} combines word embeddings and (dependency) path-based information to check if two words are hypernyms.
+            \item LexNet\footnote{\cite{DBLP:journals/corr/ShwartzD16}} is a generalization of HypeNet to find multiple semantic relations.\pause
             \item HypeNet creates a string representation of the dependency path between two words
-            \item the string representations are then encoded using an LSTM
-            \item the average of all paths for each word pair is used as the path feature
+            \item The string representations are then encoded using an LSTM.
+            \item The average of all paths for each word pair is used as the path feature.
         \end{itemize}
     \end{frame}
 
@@ -495,8 +502,8 @@
 
         \begin{itemize}
             \item \texttt{X/NOUN/nsubj/< be/VERB/ROOT/- Y/NOUN/attr/>}
-            \item Each node contains lemma, part of speech, dependency label and the edge direction
-            \item Expectation: path embeddings add valuable information to sentence embeddings
+            \item Each node contains lemma, part of speech, dependency label and the edge direction.
+            \item Expectation: path embeddings add valuable information to sentence embeddings.
 
         \end{itemize}
     \end{frame}
@@ -588,12 +595,12 @@
     \begin{frame}[t]
         \frametitle{Intermediate Results}
         \begin{itemize}
-            \item As expected, \texttt{WORSE} is hard to recognize
+            \item As expected, \texttt{WORSE} is hard to recognize.
             \item InferSent, Bag-Of-Words and Mean Word Embeddings have a similar f1 score
-            \item InferSent is more precise on \texttt{WORSE}\pause
+            \item InferSent is more precise on \texttt{WORSE}.\pause
             \item The best f1 score is 24 points above the baseline.
-            \item The original LexNet setup the worst, but still above the baseline.
-            \item The binary scenario is only slightly better than the three class scenario\pause
+            \item The original LexNet setup is the worst, but still above the baseline.
+            \item The binary scenario is only slightly better than the three class scenario.\pause
             \item Using only the middle part of the sentence \textbf{increases the f1 score by 6-13 points}.
             \item The objects contribute only little to the result; removing or replacing did not alter the f1 score by more than 0.005 points.
         \end{itemize}
@@ -601,7 +608,7 @@
 
     \subsection{Error analysis}
     \begin{frame}[t]
-        \frametitle{Error analysis 1}
+        \frametitle{Error Analysis 1}
         Errors made by InferSent and LexNet (optimized)
         \begin{itemize}
             \item<1> 1311 sentences were incorrectly classified (three class scenario).
@@ -615,7 +622,7 @@
     
     
     \begin{frame}[t]
-        \frametitle{Error analysis 2}
+        \frametitle{Error Analysis 2}
         
         \begin{itemize}
          \item The majority of errors was made on sentences with a high annotation confidence.
@@ -633,7 +640,7 @@
         \end{frame}
 
     %=========== HELD OUT HELD OUT
-    \subsection{Evaluation with the held-out data}
+    \subsection{Evaluation with the Held-Out Data}
     \frame{\subsectionpage}
 
     \begin{frame}[t]
@@ -673,37 +680,38 @@
     \begin{frame}[t]
         \frametitle{Results}
         \begin{itemize}
-            \item InferSent is again the best feature
-            \item The LexNet feature did not generalize\pause
+            \item InferSent is the best feature.
+            \item The LexNet feature did not generalize:\pause
             \begin{itemize}
                 \item 2344 unique paths for 5759 sentences (training set)
                 \item 594 unique paths for 1441 sentences (held out set)
                 \item training and held had only 81 paths in common
             \end{itemize}
-            \item No feature combination was better than InferSent
+            \item No feature combination was better than InferSent.
         \end{itemize}
     \end{frame}
 
     \section{Conclusion and Future Work}
     \frame{\sectionpage}
+    \subsection{Conclusion}
     \begin{frame}[t]
         \frametitle{Conclusion}
         \begin{itemize}
         \item The best feature could yield an f1 score of 0.85; 24 points \textbf{above} the baseline.
         \item Simple features (bag-of-words) perform almost equal to more complex features.
         \item HypeNet needs way more training data!\pause
-        \item The objects are not important for the classification at all.
+        \item Objects are not important for the classification at all.
         \item Preprocessing is crucial to achieve good scores.\pause
         \item Contrary to the expectations \texttt{WORSE} is more similar to \texttt{NONE} than to \texttt{BETTER}.
-        \item All in all, the crowd sourcing and classification worked satisfactory.
+        \item All in all, the crowd sourcing and classification worked satisfactorily.
         \end{itemize}
     \end{frame}
-    
+      \subsection{Future work}
     \begin{frame}
         \begin{itemize}
         \frametitle{Future work}
     \item More data!
-    \item Add more features to capture special cases like questions
+    \item Add more features to capture special case, for instance questions
     \item Use surrounding sentences for context information and coreference resolution
     \item Test in a real world application
     \end{itemize}
